@@ -673,7 +673,8 @@ add_ss_node(){
 	password=$(echo ${password} | base64_encode | sed 's/[[:space:]]//g')
 	plugin_support=$(echo "${urllink}"|grep -Eo "plugin=")
 	if [ -n "${plugin_support}" ];then
-		obfs_para=$(echo "${urllink}" | sed -n 's/.\+plugin=\(\)/\1/p'|sed 's/@/|/g;s/:/|/g;s/?/|/g;s/#/|/g' | awk -F'|' '{print $1}'| urldecode)
+		# obfs_para=$(echo "${urllink}" | sed -n 's/.\+plugin=\(\)/\1/p'|sed 's/@/|/g;s/:/|/g;s/?/|/g;s/#/|/g' | awk -F'|' '{print $1}'| urldecode)
+  		obfs_para=$(echo "${urllink}" | sed -n 's/.*plugin=\(.*\)/\1/p' | sed 's/@/|/g;s/:/|/g;s/?/|/g;s/#/|/g' | awk -F'|' '{print $1}' | sed 's/&.*//' | urldecode)
 		plugin_prog=$(echo "${obfs_para}" | awk -F';' '{print $1}')
 		if [ "${plugin_prog}" == "obfs-local" -o "${plugin_prog}" == "simple-obfs" ];then
 			ss_obfs=$(echo "${obfs_para}" | awk -F';' '{print $2}'| awk -F'=' '{print $2}')
